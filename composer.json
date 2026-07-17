@@ -36,7 +36,6 @@
         }
     },
     "scripts": {
-
         "ide": [
             "@php artisan ide-helper:generate",
             "@php artisan ide-helper:models -W",
@@ -84,7 +83,7 @@
             "dont-discover": []
         }
     },
-     "config": {
+    "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
@@ -93,7 +92,7 @@
             "php-http/discovery": true
         },
         "platform": {
-            "php": "8.2.0"
+            "php": "8.4.1"
         },
         "ignore-platform-reqs": true
     },

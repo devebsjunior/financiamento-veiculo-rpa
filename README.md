@@ -1861,4 +1861,8 @@ make -f ./Makefile test
 composer install
 composer dump-autoload
 php artisan serve
+
+git add composer.lock
+git commit -m "fix: atualizando dependencias do excel para suportar PHP 8.5"
+git push origin main
 ```

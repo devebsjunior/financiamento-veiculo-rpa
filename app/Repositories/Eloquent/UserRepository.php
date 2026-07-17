@@ -1,14 +1,13 @@
 <?php
 
 namespace App\Repositories\Eloquent;
-
-use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 
 class UserRepository implements UserRepositoryInterface
 {
-    public function listarTodos(): Collection
+    public function buscarTodos(): Collection
     {
         return User::all();
     }

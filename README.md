@@ -1860,4 +1860,5 @@ make -f ./Makefile test
 
 composer install
 composer dump-autoload
+php artisan serve
 ```

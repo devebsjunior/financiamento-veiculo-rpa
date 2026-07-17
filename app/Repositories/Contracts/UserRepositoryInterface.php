@@ -6,7 +6,7 @@ use App\Models\User;
 
 interface UserRepositoryInterface
 {
-
+    
     public function buscarPorEmail(string $email): ?User;
     public function salvar(array $dados): User;
     public function atualizar(User $usuario, array $dados): User;

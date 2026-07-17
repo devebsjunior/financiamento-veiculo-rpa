@@ -1,0 +1,21 @@
+.PHONY: dev test clear k8s-deploy k8s-status
+
+dev:
+	php artisan serve & php artisan queue:work
+
+test:
+	php artisan test
+
+clear:
+	php artisan optimize:clear
+	composer dump-autoload -o
+
+k8s-deploy:
+	kubectl apply -f postgres.yaml
+	kubectl apply -f auth-proxy.yaml
+	kubectl rollout restart deployment/oauth2-proxy
+
+k8s-status:
+	kubectl get pods -A
+	@echo ""
+	kubectl get svc -n portainer

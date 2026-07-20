@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Services\Contracts\CryptoServiceInterface;
-use App\Services\Contracts\TokenServiceInterface;
+use App\Services\TokenServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -27,7 +27,7 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-       
+
         $user = $this->userRepository->buscarPorEmail($request->email);
 
         if (!$user || !$this->cryptoService->verify($request->password, $user->password)) {

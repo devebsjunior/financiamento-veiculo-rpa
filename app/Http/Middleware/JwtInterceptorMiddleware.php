@@ -2,10 +2,10 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\Contracts\TokenServiceInterface;
+use App\Services\TokenServiceInterface;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse; // <-- Mudamos para o objeto de resposta JSON nativo do Laravel
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Exception;

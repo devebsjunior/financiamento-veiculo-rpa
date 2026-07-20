@@ -26,31 +26,21 @@ class UserService implements UserServiceInterface
     public function buscar(string $id): User
     {
         $usuario = $this->repository->buscarPorId($id);
-
         if (!$usuario) {
-            // Lançando a nossa GlobalException customizada (Equivalente ao Java)
             throw new GlobalException("Usuário com o ID {$id} não foi encontrado.", 404);
         }
-
         return $usuario;
     }
 
-    /**
-     * CORRIGIDO: Agora recebe array e trata a criptografia e o token isolados
-     */
     public function cadastrar(array $dados): array
     {
-
         if ($this->repository->buscarPorEmail($dados['email'])) {
             throw new GlobalException("Este e-mail já está cadastrado no sistema.", 422);
         }
         $dados['password'] = $this->cryptoService->hash($dados['password']);
-
         $usuario = $this->repository->salvar($dados);
-
         $token = $this->tokenService->generateToken($usuario);
-
-     return [
+        return [
             'user'  => $usuario,
             'token' => $token
         ];

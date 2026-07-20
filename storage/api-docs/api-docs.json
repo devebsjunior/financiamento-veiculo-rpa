@@ -1,0 +1,189 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Financiamento Veículos",
+        "description": "API para gerenciamento do sistema de financiamento de veículos",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/",
+            "description": "Servidor Local"
+        }
+    ],
+    "paths": {
+        "/api/users": {
+            "get": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Lista todos os usuários",
+                "description": "Retorna todos os usuários cadastrados",
+                "operationId": "listarUsuarios",
+                "responses": {
+                    "200": {
+                        "description": "Lista retornada com sucesso"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Cadastrar usuário",
+                "operationId": "criarUsuario",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome",
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "example": "Edson Belém"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "edson@gmail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    },
+                                    "ativo": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuário criado"
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                }
+            }
+        },
+        "/api/users/{id}": {
+            "get": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Buscar usuário",
+                "operationId": "buscarUsuario",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "UUID do usuário",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Usuário encontrado"
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Atualizar usuário",
+                "description": "Atualiza os dados cadastrais de um usuário",
+                "operationId": "atualizarUsuario",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "UUID do usuário",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "example": "Edson Belém"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "edson@gmail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    },
+                                    "ativo": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Usuário atualizado com sucesso"
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado"
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Excluir usuário",
+                "description": "Remove um usuário do sistema",
+                "operationId": "excluirUsuario",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "UUID do usuário",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Usuário removido com sucesso"
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Usuários",
+            "description": "Usuários"
+        }
+    ]
+}

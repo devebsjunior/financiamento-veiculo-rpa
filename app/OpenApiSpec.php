@@ -9,4 +9,15 @@ use OpenApi\Attributes as OA;
     title: "API Financiamento Veículos",
     description: "API para gerenciamento do sistema de financiamento de veículos"
 )]
+#[OA\SecurityScheme(
+    securityScheme: "bearerAuth",
+    type: "http",
+    scheme: "bearer",
+    bearerFormat: "JWT"
+)]
+#[OA\OpenApi(
+    security: [
+        ['bearerAuth' => []]
+    ]
+)]
 class OpenApiSpec {}

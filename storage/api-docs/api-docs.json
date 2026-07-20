@@ -6,6 +6,443 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Autenticar usuário",
+                "operationId": "login",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "usuario@email.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login efetuado com sucesso"
+                    },
+                    "401": {
+                        "description": "E-mail ou senha inválidos"
+                    },
+                    "403": {
+                        "description": "Conta desativada"
+                    }
+                }
+            }
+        },
+        "/api/clientes": {
+            "get": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Lista todos os clientes",
+                "operationId": "listarClientes",
+                "responses": {
+                    "200": {
+                        "description": "Lista retornada com sucesso"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Cadastrar cliente",
+                "operationId": "criarCliente",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome",
+                                    "cpf"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "example": "Edson Belém"
+                                    },
+                                    "cpf": {
+                                        "type": "string",
+                                        "example": "12345678901"
+                                    },
+                                    "data_nascimento": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "1990-05-10"
+                                    },
+                                    "telefone": {
+                                        "type": "string",
+                                        "example": "(24)99999-9999"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "edson@gmail.com"
+                                    },
+                                    "cep": {
+                                        "type": "string",
+                                        "example": "27510000"
+                                    },
+                                    "logradouro": {
+                                        "type": "string",
+                                        "example": "Rua das Flores"
+                                    },
+                                    "numero": {
+                                        "type": "string",
+                                        "example": "123"
+                                    },
+                                    "bairro": {
+                                        "type": "string",
+                                        "example": "Centro"
+                                    },
+                                    "cidade": {
+                                        "type": "string",
+                                        "example": "Resende"
+                                    },
+                                    "uf": {
+                                        "type": "string",
+                                        "example": "RJ"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Cliente criado com sucesso"
+                    }
+                }
+            }
+        },
+        "/api/clientes/{id}": {
+            "get": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Buscar cliente por ID",
+                "operationId": "buscarCliente",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do cliente",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cliente encontrado"
+                    },
+                    "404": {
+                        "description": "Cliente não encontrado"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Atualizar cliente",
+                "operationId": "atualizarCliente",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do cliente",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "example": "Edson Belém"
+                                    },
+                                    "cpf": {
+                                        "type": "string",
+                                        "example": "12345678901"
+                                    },
+                                    "data_nascimento": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "1990-05-10"
+                                    },
+                                    "telefone": {
+                                        "type": "string",
+                                        "example": "(24)99999-9999"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "edson@gmail.com"
+                                    },
+                                    "cep": {
+                                        "type": "string",
+                                        "example": "27510000"
+                                    },
+                                    "logradouro": {
+                                        "type": "string",
+                                        "example": "Rua das Flores"
+                                    },
+                                    "numero": {
+                                        "type": "string",
+                                        "example": "123"
+                                    },
+                                    "bairro": {
+                                        "type": "string",
+                                        "example": "Centro"
+                                    },
+                                    "cidade": {
+                                        "type": "string",
+                                        "example": "Resende"
+                                    },
+                                    "uf": {
+                                        "type": "string",
+                                        "example": "RJ"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cliente atualizado com sucesso"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Excluir cliente",
+                "operationId": "excluirCliente",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do cliente",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cliente removido com sucesso"
+                    }
+                }
+            }
+        },
+        "/api/financiamentos": {
+            "get": {
+                "tags": [
+                    "Financiamentos"
+                ],
+                "summary": "Lista todos os financiamentos",
+                "operationId": "listarFinanciamentos",
+                "responses": {
+                    "200": {
+                        "description": "Lista retornada com sucesso"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Financiamentos"
+                ],
+                "summary": "Cadastrar financiamento",
+                "operationId": "criarFinanciamento",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "cliente_id",
+                                    "veiculo_id",
+                                    "numero_contrato",
+                                    "valor_veiculo",
+                                    "valor_entrada",
+                                    "valor_financiado",
+                                    "taxa_juros",
+                                    "quantidade_parcelas",
+                                    "data_contratacao",
+                                    "situacao"
+                                ],
+                                "properties": {
+                                    "cliente_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "veiculo_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "numero_contrato": {
+                                        "type": "string",
+                                        "example": "CTR-2026-0001"
+                                    },
+                                    "valor_veiculo": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 80000
+                                    },
+                                    "valor_entrada": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 20000
+                                    },
+                                    "valor_financiado": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 60000
+                                    },
+                                    "taxa_juros": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 1.99
+                                    },
+                                    "quantidade_parcelas": {
+                                        "type": "integer",
+                                        "example": 48
+                                    },
+                                    "data_contratacao": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-07-20"
+                                    },
+                                    "situacao": {
+                                        "type": "string",
+                                        "example": "ATIVO"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Financiamento criado com sucesso"
+                    }
+                }
+            }
+        },
+        "/api/financiamentos/{id}": {
+            "get": {
+                "tags": [
+                    "Financiamentos"
+                ],
+                "summary": "Buscar financiamento por ID",
+                "operationId": "buscarFinanciamento",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do financiamento",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Financiamento encontrado"
+                    },
+                    "404": {
+                        "description": "Financiamento não encontrado"
+                    }
+                }
+            }
+        },
+        "/api/parcelas": {
+            "get": {
+                "tags": [
+                    "Parcelas"
+                ],
+                "summary": "Lista todas as parcelas",
+                "operationId": "listarParcelas",
+                "responses": {
+                    "200": {
+                        "description": "Lista retornada com sucesso"
+                    }
+                }
+            }
+        },
+        "/api/parcelas/{id}": {
+            "get": {
+                "tags": [
+                    "Parcelas"
+                ],
+                "summary": "Buscar parcela por ID",
+                "operationId": "buscarParcela",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da parcela",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Parcela encontrada"
+                    },
+                    "404": {
+                        "description": "Parcela não encontrada"
+                    }
+                }
+            }
+        },
+        "/api/parcelas/{id}/pagar": {
+            "post": {
+                "tags": [
+                    "Parcelas"
+                ],
+                "summary": "Realiza o pagamento da parcela",
+                "operationId": "pagarParcela",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da parcela",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Parcela paga com sucesso"
+                    },
+                    "404": {
+                        "description": "Parcela não encontrada"
+                    }
+                }
+            }
+        },
         "/api/users": {
             "get": {
                 "tags": [
@@ -172,12 +609,174 @@
                     }
                 }
             }
+        },
+        "/api/veiculos": {
+            "get": {
+                "tags": [
+                    "Veículos"
+                ],
+                "summary": "Lista todos os veículos",
+                "operationId": "listarVeiculos",
+                "responses": {
+                    "200": {
+                        "description": "Lista retornada com sucesso"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Veículos"
+                ],
+                "summary": "Cadastrar veículo",
+                "operationId": "criarVeiculo",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "placa",
+                                    "marca",
+                                    "modelo",
+                                    "ano_fabricacao",
+                                    "ano_modelo"
+                                ],
+                                "properties": {
+                                    "placa": {
+                                        "type": "string",
+                                        "example": "ABC1D23"
+                                    },
+                                    "marca": {
+                                        "type": "string",
+                                        "example": "Toyota"
+                                    },
+                                    "modelo": {
+                                        "type": "string",
+                                        "example": "Corolla"
+                                    },
+                                    "ano_fabricacao": {
+                                        "type": "integer",
+                                        "example": 2024
+                                    },
+                                    "ano_modelo": {
+                                        "type": "integer",
+                                        "example": 2025
+                                    },
+                                    "cor": {
+                                        "type": "string",
+                                        "example": "Prata"
+                                    },
+                                    "renavam": {
+                                        "type": "string",
+                                        "example": "12345678901"
+                                    },
+                                    "chassi": {
+                                        "type": "string",
+                                        "example": "9BWZZZ377VT004251"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Veículo criado com sucesso"
+                    }
+                }
+            }
+        },
+        "/api/veiculos/{id}": {
+            "get": {
+                "tags": [
+                    "Veículos"
+                ],
+                "summary": "Buscar veículo por ID",
+                "operationId": "buscarVeiculo",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do veículo",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Veículo encontrado"
+                    },
+                    "404": {
+                        "description": "Veículo não encontrado"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Veículos"
+                ],
+                "summary": "Atualizar veículo",
+                "operationId": "atualizarVeiculo",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do veículo",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Veículo atualizado com sucesso"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Veículos"
+                ],
+                "summary": "Excluir veículo",
+                "operationId": "excluirVeiculo",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do veículo",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Veículo removido com sucesso"
+                    }
+                }
+            }
         }
     },
     "tags": [
         {
+            "name": "Autenticação",
+            "description": "Autenticação"
+        },
+        {
+            "name": "Clientes",
+            "description": "Clientes"
+        },
+        {
+            "name": "Financiamentos",
+            "description": "Financiamentos"
+        },
+        {
+            "name": "Parcelas",
+            "description": "Parcelas"
+        },
+        {
             "name": "Usuários",
             "description": "Usuários"
+        },
+        {
+            "name": "Veículos",
+            "description": "Veículos"
         }
     ]
 }

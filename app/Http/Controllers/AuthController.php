@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Services\Contracts\CryptoServiceInterface;
-use App\Services\TokenServiceInterface;
+use App\Services\Contracts\TokenServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use OpenApi\Attributes as OA;
 
 class AuthController extends Controller
 {
@@ -17,9 +18,42 @@ class AuthController extends Controller
         private TokenServiceInterface $tokenService
     ) {}
 
-    /**
-     * Endpoint de Autenticação (Login)
-     */
+    #[OA\Post(
+        path: '/api/login',
+        operationId: 'login',
+        tags: ['Autenticação'],
+        summary: 'Autenticar usuário'
+    )]
+    #[OA\RequestBody(
+        required: true,
+        content: new OA\JsonContent(
+            required: ['email', 'password'],
+            properties: [
+                new OA\Property(
+                    property: 'email',
+                    type: 'string',
+                    example: 'usuario@email.com'
+                ),
+                new OA\Property(
+                    property: 'password',
+                    type: 'string',
+                    example: '123456'
+                )
+            ]
+        )
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Login efetuado com sucesso'
+    )]
+    #[OA\Response(
+        response: 401,
+        description: 'E-mail ou senha inválidos'
+    )]
+    #[OA\Response(
+        response: 403,
+        description: 'Conta desativada'
+    )]
     public function login(Request $request): JsonResponse
     {
         $request->validate([

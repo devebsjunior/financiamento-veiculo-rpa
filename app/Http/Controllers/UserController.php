@@ -10,9 +10,6 @@ use OpenApi\Attributes as OA;
 
 class UserController extends Controller
 {
-    /**
-     * Injeção sênior baseada na Interface do Serviço (Igual ao Spring @Autowired)
-     */
     public function __construct(
         private UserServiceInterface $userService
     ) {}

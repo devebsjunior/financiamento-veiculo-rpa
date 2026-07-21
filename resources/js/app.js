@@ -1,7 +1,7 @@
-import { buscarDadosPorCep } from './services/cepService';
-import { alertService } from './services/alertService';
+import Swal from 'sweetalert2';
+import { alertService } from './alertService';
+import { buscarDadosPorCep } from './cepService';
 
 window.cepService = { buscar: buscarDadosPorCep };
+window.Swal = Swal;
 window.alertService = alertService;
-
-

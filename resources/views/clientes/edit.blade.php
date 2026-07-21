@@ -4,6 +4,7 @@
 
 @section('content')
     <div class="p-6 max-w-5xl mx-auto w-full">
+        <!-- Cabeçalho Principal -->
         <div class="flex justify-between items-center pb-4 mb-6 border-b border-slate-200">
             <h1 class="text-3xl font-bold text-slate-800">Editar Cliente</h1>
             <a
@@ -15,6 +16,7 @@
             </a>
         </div>
 
+        <!-- Container do Formulário -->
         <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden w-full">
             <form
                 id="editClienteForm"
@@ -22,6 +24,7 @@
                 class="p-6 space-y-6"
             >
 
+                <!-- Alerta de Erro Dinâmico -->
                 <div
                     id="errorAlert"
                     class="hidden bg-red-50 border border-red-200 text-red-600 p-4 rounded-lg text-sm font-medium flex items-center gap-2"
@@ -30,8 +33,10 @@
                     <span id="errorAlertText">Preencha todos os campos obrigatórios.</span>
                 </div>
 
+                <!-- GRID PRINCIPAL -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 w-full">
 
+                    <!-- COLUNA DA ESQUERDA: Dados Pessoais & Contato -->
                     <div class="space-y-6">
                         <div>
                             <h2
@@ -115,6 +120,7 @@
                         </div>
                     </div>
 
+                    <!-- COLUNA DA DIREITA: Endereço -->
                     <div class="space-y-4 md:border-l md:border-slate-100 md:pl-8">
                         <h2
                             class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-1.5">
@@ -207,6 +213,7 @@
 
                 </div>
 
+                <!-- Rodapé Uniforme -->
                 <div
                     class="flex justify-end items-center gap-3 pt-4 border-t border-slate-100 bg-slate-50 -mx-6 -mb-6 p-4">
                     <a
@@ -238,13 +245,10 @@
             if (cepInput) {
                 cepInput.addEventListener('blur', async (event) => {
                     const valorCep = event.target.value.replace(/\D/g, '');
-
                     if (valorCep.length === 8) {
                         try {
-                            // Abordagem direta e assíncrona para garantir o funcionamento independente do Vite
                             const response = await fetch(`https://viacep.com.br/ws/${valorCep}/json/`);
                             const data = await response.json();
-
                             if (!data.erro) {
                                 document.querySelector('input[name="logradouro"]').value = data
                                     .logradouro;
@@ -271,10 +275,7 @@
                 });
 
                 const result = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(result.message || 'Erro ao carregar os dados do cliente.');
-                }
+                if (!response.ok) throw new Error(result.message || 'Erro ao carregar dados.');
 
                 const cliente = result.data || result;
                 document.querySelector('input[name="nome"]').value = cliente.nome ?? '';
@@ -343,23 +344,39 @@
                 const result = await response.json();
                 if (!response.ok) throw new Error(result.message || 'Erro ao atualizar dados.');
 
-                if (window.alertService) {
-                    await window.alertService.success('Sucesso!', 'Os dados do cliente foram alterados com sucesso.');
-                }
-                window.location.href = '/clientes';
-            } catch (error) {
-                if (window.alertService) {
-                    window.alertService.error('Ops!', error.message);
-                } else {
-                    errorAlertText.textContent = error.message;
-                    errorAlert.classList.remove('hidden');
-                    window.scrollTo({
-                        top: 0,
-                        behavior: 'smooth'
+                // ========================================================
+                // IMPEDINDO O HELPER COMPLEXO DE QUEBRAR O FLUXO
+                // ========================================================
+                if (window.Swal) {
+                    // Abre o modal estilizado usando a instância global injetada pelo Vite
+                    await window.Swal.fire({
+                        title: 'Sucesso!',
+                        text: 'Os dados do cliente foram alterados com sucesso.',
+                        icon: 'success',
+                        confirmButtonColor: '#2563eb', // Azul premium do painel
+                        confirmButtonText: 'ok',
+                        allowOutsideClick: false
                     });
+                } else if (window.alertService && typeof window.alertService.success === 'function') {
+                    await window.alertService.success('Sucesso!', 'Os dados do cliente foram alterados com sucesso.');
+                } else {
+                    alert('Os dados do cliente foram alterados com sucesso.');
                 }
+
+                // O redirecionamento aguarda a confirmação do modal acima
+                window.location.href = '/clientes';
+
+            } catch (error) {
+                // Se houver algum erro real na API, exibe no banner vermelho
+                errorAlertText.textContent = error.message;
+                errorAlert.classList.remove('hidden');
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
             }
         }
     </script>
+
 
 @endsection

@@ -8,8 +8,8 @@ export const alertService = {
             text: text,
             icon: 'success',
             confirmButtonColor: '#2563eb',
-            confirmButtonText: 'Entendido',
-            fontFamily: '"Plus Jakarta Sans", sans-serif'
+            confirmButtonText: 'ok',
+            allowOutsideClick: false,
         });
     },
 
@@ -19,7 +19,6 @@ export const alertService = {
             text: text,
             icon: 'error',
             confirmButtonColor: '#dc2626',
-            fontFamily: '"Plus Jakarta Sans", sans-serif'
         });
     },
 
@@ -33,7 +32,6 @@ export const alertService = {
             cancelButtonColor: '#64748b',
             confirmButtonText: 'Sim, sair',
             cancelButtonText: 'Cancelar',
-            fontFamily: '"Plus Jakarta Sans", sans-serif'
         });
         return result.isConfirmed;
     }

@@ -1,89 +1,66 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+@extends('layouts.app')
 
-    @vite(['resources/css/app.css'])
-</head>
+@section('title', 'Dashboard')
 
-<body class="bg-slate-100">
+@section('content')
+    <h1 class="text-3xl font-bold text-slate-800 mb-8">
+        Dashboard
+    </h1>
 
-<div class="flex min-h-screen">
+    <!-- Grid de 5 colunas -->
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6">
 
-    <aside class="w-64 bg-slate-900 text-white">
-
-        <div class="p-6 text-xl font-bold">
-            Financeiro
+        <!-- Card de Clientes -->
+        <div class="relative overflow-hidden bg-white rounded-xl shadow p-6 border border-slate-100">
+            <div class="relative z-10">
+                <p class="text-slate-500 font-medium text-sm">Clientes</p>
+                <h2 class="text-4xl font-bold mt-2 text-slate-800">{{ $totalClientes }}</h2>
+            </div>
+            <!-- Ícone de Fundo -->
+            <i class="fa-solid fa-users absolute right-4 bottom-2 text-6xl text-slate-200/60 pointer-events-none"></i>
         </div>
 
-        <nav class="px-4 space-y-2">
-
-            # class="block p-3 rounded hover:bg-slate-800">
-                Dashboard
-            </a>
-
-            #block p-3 rounded hover:bg-slate-800">
-                Clientes
-            </a>
-
-            # rounded hover:bg-slate-800">
-                Veículos
-            </a>
-
-            #
-
-            #
-
-            <a href           Usuários
-            </a>
-
-        </nav>
-
-    </aside>
-
-    <main class="flex-1 p-8">
-
-        <h1 class="text-3xl font-bold text-slate-800 mb-8">
-            Dashboard
-        </h1>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-
-            <div class="bg-white rounded-xl shadow p-6">
-                <p class="text-slate-500">Clientes</p>
-                <h2 class="text-4xl font-bold mt-2">
-                    0
-                </h2>
+        <!-- Card de Usuários -->
+        <div class="relative overflow-hidden bg-white rounded-xl shadow p-6 border border-slate-100">
+            <div class="relative z-10">
+                <p class="text-slate-500 font-medium text-sm">Usuários</p>
+                <h2 class="text-4xl font-bold mt-2 text-slate-800">{{ $totalUsuarios }}</h2>
             </div>
-
-            <div class="bg-white rounded-xl shadow p-6">
-                <p class="text-slate-500">Veículos</p>
-                <h2 class="text-4xl font-bold mt-2">
-                    0
-                </h2>
-            </div>
-
-            <div class="bg-white rounded-xl shadow p-6">
-                <p class="text-slate-500">Financiamentos</p>
-                <h2 class="text-4xl font-bold mt-2">
-                    0
-                </h2>
-            </div>
-
-            <div class="bg-white rounded-xl shadow p-6">
-                <p class="text-slate-500">Parcelas</p>
-                <h2 class="text-4xl font-bold mt-2">
-                    0
-                </h2>
-            </div>
-
+            <!-- Ícone de Fundo -->
+            <i class="fa-solid fa-user-shield absolute right-4 bottom-2 text-6xl text-slate-200/60 pointer-events-none"></i>
         </div>
 
-    </main>
+        <!-- Card de Veículos -->
+        <div class="relative overflow-hidden bg-white rounded-xl shadow p-6 border border-slate-100">
+            <div class="relative z-10">
+                <p class="text-slate-500 font-medium text-sm">Veículos</p>
+                <h2 class="text-4xl font-bold mt-2 text-slate-800">0</h2>
+            </div>
+            <!-- Ícone de Fundo -->
+            <i class="fa-solid fa-car absolute right-4 bottom-2 text-6xl text-slate-200/60 pointer-events-none"></i>
+        </div>
 
-</div>
+        <!-- Card de Financiamentos -->
+        <div class="relative overflow-hidden bg-white rounded-xl shadow p-6 border border-slate-100">
+            <div class="relative z-10">
+                <p class="text-slate-500 font-medium text-sm">Financiamentos</p>
+                <h2 class="text-4xl font-bold mt-2 text-slate-800">0</h2>
+            </div>
+            <!-- Ícone de Fundo -->
+            <i
+                class="fa-solid fa-file-invoice-dollar absolute right-4 bottom-2 text-6xl text-slate-200/60 pointer-events-none"></i>
+        </div>
 
-</body>
-</html>
+        <!-- Card de Parcelas -->
+        <div class="relative overflow-hidden bg-white rounded-xl shadow p-6 border border-slate-100">
+            <div class="relative z-10">
+                <p class="text-slate-500 font-medium text-sm">Parcelas</p>
+                <h2 class="text-4xl font-bold mt-2 text-slate-800">0</h2>
+            </div>
+            <!-- Ícone de Fundo -->
+            <i
+                class="fa-solid fa-calendar-days absolute right-4 bottom-2 text-6xl text-slate-200/60 pointer-events-none"></i>
+        </div>
+
+    </div>
+@endsection

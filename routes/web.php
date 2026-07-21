@@ -1,16 +1,37 @@
 <?php
 
+use App\Models\Cliente;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Middleware\K8sAutoAuth;
 
-Route::view('/', 'auth.login');
-Route::view( '/dashboard', 'dashboard' );
-
-Route::middleware([K8sAutoAuth::class])->group(function () {
-
-    Route::get('/dashboard', function () {
-        $user = Auth::user();
-        return response("Olá, {$user->name}! Você foi autenticado pelo Kubernetes e logado/cadastrado no PostgreSQL de forma automática. Seu e-mail é: {$user->email}", 200);
-    });
+Route::get('/', function () {
+    return view('auth.login');
 });
+
+Route::get('/login', function () {
+    return view('auth.login');
+})->name('login');
+
+
+Route::get('/dashboard', function () {
+    $totalClientes = Cliente::count();
+    $totalUsuarios = User::count();
+    return view('dashboard', compact('totalClientes', 'totalUsuarios'));
+});
+
+// Telas de Clientes (Apenas entregam as Views Blade)
+Route::view('/clientes', 'clientes.index');
+Route::view('/clientes/create', 'clientes.create');
+Route::get('/clientes/{id}/edit', function ($id) {
+    return view('clientes.edit');
+});
+
+// Telas de Usuários
+Route::view('/usuarios', 'usuarios.index');
+Route::view('/usuarios/create', 'usuarios.create');
+
+// Telas de Veículos (Se já existirem as views, descomente abaixo)
+// Route::view('/veiculos', 'veiculos.index');
+
+// Telas de Financiamentos (Se já existirem as views, descomente abaixo)
+// Route::view('/financiamentos', 'financiamentos.index');

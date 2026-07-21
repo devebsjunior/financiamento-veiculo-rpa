@@ -213,4 +213,23 @@ class UserController extends Controller
             'message' => 'Usuário excluído com sucesso!'
         ], 200);
     }
+
+    #[OA\Get(
+        path: '/api/users/export',
+        operationId: 'exportarUsuariosXls',
+        tags: ['Usuários'],
+        summary: 'Exportar usuários para XLS',
+        description: 'Baixa uma planilha Excel (.xlsx) contendo a listagem de usuários do sistema.'
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Planilha baixada com sucesso'
+    )]
+    public function export()
+    {
+        return \Maatwebsite\Excel\Facades\Excel::download(
+            new \App\Exports\UsersExport,
+            'lista-usuarios_' . date('Y-m-d_H-i') . '.xlsx'
+        );
+    }
 }

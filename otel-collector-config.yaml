@@ -1,0 +1,61 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+# Processadores realizam transformações em lote ou limpezas de segurança
+processors:
+  batch:
+    # Agrupa dados antes de enviar para economizar requisições de rede
+    send_batch_size: 8192
+    timeout: 5s
+    send_batch_max_size: 10240
+
+  memory_limiter:
+    # Evita que o OpenTelemetry Collector derrube o servidor por falta de RAM se houver um surto de acessos
+    check_interval: 1s
+    limit_percentage: 75
+    spike_limit_percentage: 20
+
+exporters:
+  # Roteia os traces para uma ferramenta como o Jaeger ou Grafana Tempo
+  otlp/traces:
+    endpoint: tempo-server.internal.banco:4317
+    tls:
+      insecure: false
+      ca_file: /etc/ssl/certs/banco-ca.pem
+
+  # Roteia as métricas para o Prometheus da equipe de infraestrutura
+  prometheus:
+    endpoint: 0.0.0.0:8889
+
+  # Roteia os logs para o cluster central de Logs do banco (Elasticsearch/OpenSearch)
+  opensearch:
+    logs_index: "laravel-logs-agencias"
+    endpoint: https://opensearch.internal.banco:9200
+    tls:
+      insecure: false
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [otlp/traces]
+
+    metrics:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [prometheus]
+
+    logs:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [opensearch]
+
+  telemetry:
+    logs:
+      level: "info"

@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\FinanciamentoController;
 use App\Http\Controllers\ParcelaController;
+use App\Http\Controllers\PontoController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VeiculoController;
 use Illuminate\Support\Facades\Route;
@@ -26,4 +27,11 @@ Route::middleware('jwt.auth')->group(function () {
     Route::get('parcelas', [ParcelaController::class, 'index']);
     Route::get('parcelas/{id}', [ParcelaController::class, 'show']);
     Route::patch('parcelas/{id}/pagar', [ParcelaController::class, 'pagar']);
+
+    Route::post('/ponto/marcar', [PontoController::class, 'baterPonto']);
+    Route::get('/ponto/espelho/{anoMes}', [PontoController::class, 'espelhoMes']);
+    Route::get('/ponto/admin/listar', [PontoController::class, 'index']);
+    Route::put('/ponto/admin/{id}', [PontoController::class, 'update']);
+    Route::delete('/ponto/admin/{id}', [PontoController::class, 'destroy']);
+    Route::delete('/ponto/admin/{id}/horario/{index}', [PontoController::class, 'destroyHorario']);
 });

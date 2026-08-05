@@ -443,6 +443,233 @@
                 }
             }
         },
+        "/api/ponto/admin/listar": {
+            "get": {
+                "tags": [
+                    "Marcação de Ponto"
+                ],
+                "summary": "Listar todos os pontos (Admin)",
+                "description": "Retorna a lista paginada dos registros de ponto de todos os usuários.",
+                "operationId": "e8462758a75146db37b9d73271e36235",
+                "responses": {
+                    "200": {
+                        "description": "Lista de pontos retornada com sucesso"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ponto/admin/{id}": {
+            "put": {
+                "tags": [
+                    "Marcação de Ponto"
+                ],
+                "summary": "Editar um ponto existente (Admin)",
+                "description": "Permite que o administrador altere a lista de horários ou a observação de um registro.",
+                "operationId": "d0193d7ef5ab79f80bb7bf6d2a932d23",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do registro de ponto",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "horarios": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "example": "08:00:00"
+                                        }
+                                    },
+                                    "observacao": {
+                                        "type": "string",
+                                        "example": "Horário corrigido pelo RH"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ponto atualizado com sucesso"
+                    },
+                    "404": {
+                        "description": "Registro de ponto não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Marcação de Ponto"
+                ],
+                "summary": "Apagar um registro de ponto (Admin)",
+                "description": "Remove um registro de ponto batido incorretamente.",
+                "operationId": "262d6a2303d7b6a7e6e0bd34c8b6af2a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do registro de ponto a ser removido",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ponto removido com sucesso"
+                    },
+                    "404": {
+                        "description": "Registro de ponto não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ponto/marcar": {
+            "post": {
+                "tags": [
+                    "Marcação de Ponto"
+                ],
+                "summary": "Bater o ponto do usuário autenticado",
+                "description": "Registra um novo horário de entrada/saída para o usuário logado no dia atual.",
+                "operationId": "3858c509ba9c949c06af9aa25025f1ae",
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "observacao": {
+                                        "type": "string",
+                                        "example": "Trabalho remoto"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ponto registrado com sucesso"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ponto/espelho/{anoMes}": {
+            "get": {
+                "tags": [
+                    "Marcação de Ponto"
+                ],
+                "summary": "Consultar espelho de ponto mensal",
+                "description": "Retorna o histórico de batidas e horas acumuladas no mês.",
+                "operationId": "029b1718c3992eb65d5f160b5ac356db",
+                "parameters": [
+                    {
+                        "name": "anoMes",
+                        "in": "path",
+                        "description": "Ano e mês de referência no formato YYYY-MM",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "2026-08"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Espelho de ponto retornado com sucesso"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ponto/admin/{id}/horario/{index}": {
+            "delete": {
+                "tags": [
+                    "Marcação de Ponto"
+                ],
+                "summary": "Remover um horário específico do ponto (Admin)",
+                "description": "Remove um horário do array de batidas com base no seu índice de posição (0, 1, 2...).",
+                "operationId": "cf21e23bce233422dda554a3c1cd0009",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do registro de ponto",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "index",
+                        "in": "path",
+                        "description": "Índice do horário no array (ex: 0 para a primeira batida)",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 0
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Horário removido do registro com sucesso"
+                    },
+                    "404": {
+                        "description": "Registro de ponto não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/users": {
             "get": {
                 "tags": [
@@ -610,6 +837,21 @@
                 }
             }
         },
+        "/api/users/export": {
+            "get": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Exportar usuários para XLS",
+                "description": "Baixa uma planilha Excel (.xlsx) contendo a listagem de usuários do sistema.",
+                "operationId": "exportarUsuariosXls",
+                "responses": {
+                    "200": {
+                        "description": "Planilha baixada com sucesso"
+                    }
+                }
+            }
+        },
         "/api/veiculos": {
             "get": {
                 "tags": [
@@ -768,6 +1010,10 @@
         }
     ],
     "tags": [
+        {
+            "name": "Marcação de Ponto",
+            "description": "Endpoints para registro e consulta de ponto"
+        },
         {
             "name": "Autenticação",
             "description": "Autenticação"

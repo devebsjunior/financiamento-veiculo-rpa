@@ -1,0 +1,16 @@
+FROM php:8.4-fpm-alpine
+
+# Instala dependências do sistema e extensões do PHP (PostgreSQL, PDO, Zip, BCMath)
+RUN apk add --no-cache \
+    postgresql-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    git \
+    curl \
+    && docker-php-ext-install pdo pdo_pgsql zip bcmath
+
+WORKDIR /var/www
+
+EXPOSE 9000
+CMD ["php-fpm"]

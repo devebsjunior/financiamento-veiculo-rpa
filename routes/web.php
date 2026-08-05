@@ -35,3 +35,5 @@ Route::view('/usuarios/create', 'usuarios.create');
 
 // Telas de Financiamentos (Se já existirem as views, descomente abaixo)
 // Route::view('/financiamentos', 'financiamentos.index');
+
+Route::view('/ponto', 'ponto.index');

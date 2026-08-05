@@ -228,24 +228,31 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        // Importa o SweetAlert direto do node_modules usando o ecossistema do Vite
+        import Swal from 'sweetalert2';
+
         document.addEventListener('DOMContentLoaded', () => {
             const cepInput = document.querySelector('input[name="cep"]');
 
             if (cepInput) {
                 cepInput.addEventListener('blur', async (event) => {
-                    const valorCep = event.target.value;
+                    const valorCep = event.target.value.replace(/\D/g, '');
 
-                    // Consome o serviço reaproveitável centralizado de CEP
-                    if (window.cepService && window.cepService.buscar) {
-                        const endereco = await window.cepService.buscar(valorCep);
+                    if (valorCep.length === 8) {
+                        try {
+                            const response = await fetch(`https://viacep.com.br/ws/${valorCep}/json/`);
+                            const data = await response.json();
 
-                        if (endereco) {
-                            document.querySelector('input[name="logradouro"]').value = endereco
-                                .logradouro;
-                            document.querySelector('input[name="bairro"]').value = endereco.bairro;
-                            document.querySelector('input[name="cidade"]').value = endereco.cidade;
-                            document.querySelector('input[name="uf"]').value = endereco.uf;
+                            if (!data.erro) {
+                                document.querySelector('input[name="logradouro"]').value = data
+                                    .logradouro;
+                                document.querySelector('input[name="bairro"]').value = data.bairro;
+                                document.querySelector('input[name="cidade"]').value = data.localidade;
+                                document.querySelector('input[name="uf"]').value = data.uf;
+                            }
+                        } catch (e) {
+                            console.error("Erro na busca do CEP:", e);
                         }
                     }
                 });
@@ -300,28 +307,35 @@
                 const result = await response.json();
                 if (!response.ok) throw new Error(result.message || 'Erro ao processar requisição.');
 
-                // Dispara o alerta do SweetAlert e espera a confirmação antes de mudar de página
-                if (window.alertService) {
-                    await window.alertService.success('Sucesso!',
-                        'O cliente foi cadastrado corretamente na base de dados.');
-                }
+                // ========================================================
+                // IMPORTE E EXECUÇÃO DIRETA SEM DEPENDER DE WINDOW
+                // ========================================================
+                await Swal.fire({
+                    title: 'Sucesso!',
+                    text: 'O cliente foi cadastrado corretamente na base de dados.',
+                    icon: 'success',
+                    confirmButtonColor: '#2563eb', // Azul premium do Tailwind
+                    confirmButtonText: 'ok',
+                    allowOutsideClick: false,
+                    fontFamily: '"Plus Jakarta Sans", sans-serif'
+                });
 
+                // O redirecionamento aguarda estritamente o clique no botão do modal anterior
                 window.location.href = '/clientes';
 
             } catch (error) {
-                // Se a API falhar, podemos usar o SweetAlert de erro ou manter o banner superior
-                if (window.alertService) {
-                    window.alertService.error('Ops!', error.message);
-                } else {
-                    errorAlertText.textContent = error.message;
-                    errorAlert.classList.remove('hidden');
-                    window.scrollTo({
-                        top: 0,
-                        behavior: 'smooth'
-                    });
-                }
+                await Swal.fire({
+                    title: 'Ops!',
+                    text: error.message,
+                    icon: 'error',
+                    confirmButtonColor: '#dc2626',
+                    fontFamily: '"Plus Jakarta Sans", sans-serif'
+                });
             }
         }
+
+        // Vincula a função ao escopo global para o atributo onsubmit="salvarCliente(event)" continuar funcionando
+        window.salvarCliente = salvarCliente;
     </script>
 
 @endsection

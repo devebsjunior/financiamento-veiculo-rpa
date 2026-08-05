@@ -9,6 +9,10 @@ use OpenApi\Attributes as OA;
     title: "API Financiamento Veículos",
     description: "API para gerenciamento do sistema de financiamento de veículos"
 )]
+#[OA\Tag(
+    name: "Marcação de Ponto",
+    description: "Endpoints para registro e consulta de ponto"
+)]
 #[OA\SecurityScheme(
     securityScheme: "bearerAuth",
     type: "http",

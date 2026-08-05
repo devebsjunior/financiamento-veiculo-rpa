@@ -8,8 +8,7 @@
         content="width=device-width, initial-scale=1.0"
     >
     <title>@yield('title')</title>
-
-    @vite(['resources/css/app.css'])
+    @vite(['resources/css/app.css', 'resources/js/auth-guard.js'])
 </head>
 
 <body class="bg-slate-100">
@@ -69,7 +68,14 @@
                         class="fa-solid fa-user-shield text-slate-400 group-hover:text-indigo-400 w-5 text-center transition-colors"></i>
                     <span class="font-medium text-sm">Usuários</span>
                 </a>
-
+                <a
+                    href="/ponto"
+                    class="flex items-center gap-3 p-3 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-colors group"
+                >
+                    <i
+                        class="fa-solid fa-user-shield text-slate-400 group-hover:text-indigo-400 w-5 text-center transition-colors"></i>
+                    <span class="font-medium text-sm">Controle de Ponto</span>
+                </a>
             </nav>
 
             <div class="p-4 border-t border-slate-800 bg-slate-950/40">

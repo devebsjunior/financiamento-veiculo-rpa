@@ -7,8 +7,11 @@ use App\Services\Contracts\CryptoServiceInterface;
 use App\Services\Contracts\TokenServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use OpenApi\Attributes as OA;
+use Throwable;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -22,7 +25,7 @@ class AuthController extends Controller
         path: '/api/login',
         operationId: 'login',
         tags: ['Autenticação'],
-        summary: 'Autenticar usuário'
+        summary: 'Autenticar utilizador'
     )]
     #[OA\RequestBody(
         required: true,
@@ -48,7 +51,7 @@ class AuthController extends Controller
     )]
     #[OA\Response(
         response: 401,
-        description: 'E-mail ou senha inválidos'
+        description: 'E-mail ou palavra-passe inválidos'
     )]
     #[OA\Response(
         response: 403,
@@ -56,49 +59,71 @@ class AuthController extends Controller
     )]
     public function login(Request $request): JsonResponse
     {
-        $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ]);
+        Log::info('[AUTH DEBUG] Tentativa de login iniciada', ['email' => $request->input('email')]);
 
+        try {
+            // 1. Validar dados da requisição
+            $request->validate([
+                'email' => 'required|email',
+                'password' => 'required|string',
+            ]);
 
-        $user = $this->userRepository->buscarPorEmail($request->email);
+            $credentials = $request->only('email', 'password');
 
-        if (!$user || !$this->cryptoService->verify($request->password, $user->password)) {
+            Log::info('[AUTH DEBUG] A tentar autenticação via guard api (JWT)...');
+
+            // 2. Tentar autenticar o utilizador com o Guard de API/JWT
+            if (! $token = Auth::guard('api')->attempt($credentials)) {
+                Log::warning('[AUTH DEBUG] Falha de autenticação: credenciais inválidas', ['email' => $request->input('email')]);
+                return response()->json(['error' => 'E-mail ou palavra-passe inválidos'], 401);
+            }
+
+            Log::info('[AUTH DEBUG] Login efetuado com sucesso!', ['email' => $request->input('email')]);
+
+            // Anotação PHPDoc para o Intelephense reconhecer os métodos do JWTGuard
+            /** @var \Tymon\JWTAuth\JWTGuard $guard */
+            $guard = Auth::guard('api');
+
+            // 3. Retornar resposta com Token e dados do Utilizador
             return response()->json([
-                'status' => 401,
-                'error' => 'Unauthorized',
-                'message' => 'E-mail ou senha incorretos.'
-            ], 401);
-        }
+                'access_token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => $guard->factory()->getTTL() * 60,
+                'user' => $guard->user()
+            ]);
 
+        } catch (Throwable $e) {
+            // Regista o erro completo no log do Laravel
+            Log::error('[AUTH ERROR 500] Exceção apanhada durante o login: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
 
-        if (!$user->ativo) {
+            // Retorna a exceção detalhada no corpo da resposta 500 para visualização imediata no F12
             return response()->json([
-                'status' => 403,
-                'error' => 'Forbidden',
-                'message' => 'Esta conta está desativada.'
-            ], 403);
+                'error' => 'Erro interno no servidor (500)',
+                'exception_message' => $e->getMessage(),
+                'exception_file' => $e->getFile(),
+                'exception_line' => $e->getLine(),
+            ], 500);
         }
-
-
-        $token = $this->tokenService->generateToken($user);
-
-        return response()->json([
-            'message' => 'Login efetuado com sucesso',
-            'user' => $user,
-            'token' => $token
-        ], 200);
     }
 
-
+    /**
+     * Encerrar a sessão do utilizador e revogar o Token.
+     */
     public function logout(): JsonResponse
     {
+        try {
+            JWTAuth::invalidate(JWTAuth::getToken());
 
-        JWTAuth::invalidate(JWTAuth::getToken());
-
-        return response()->json([
-            'message' => 'Logout efetuado com sucesso. Token revogado.'
-        ], 200);
+            return response()->json([
+                'message' => 'Logout efetuado com sucesso. Token revogado.'
+            ], 200);
+        } catch (Throwable $e) {
+            Log::error('[AUTH ERROR] Erro no logout: ' . $e->getMessage());
+            return response()->json(['error' => 'Erro ao encerrar a sessão'], 500);
+        }
     }
 }

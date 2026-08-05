@@ -14,8 +14,16 @@ Route::get('/login', function () {
 
 
 Route::get('/dashboard', function () {
-    $totalClientes = Cliente::count();
-    $totalUsuarios = User::count();
+    try {
+        $totalClientes = \App\Models\Cliente::count();
+    } catch (\Throwable $e) {
+        $totalClientes = 0;
+    }
+    try {
+        $totalUsuarios = \App\Models\User::count();
+    } catch (\Throwable $e) {
+        $totalUsuarios = 0;
+    }
     return view('dashboard', compact('totalClientes', 'totalUsuarios'));
 });
 

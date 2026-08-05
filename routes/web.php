@@ -12,36 +12,30 @@ Route::get('/login', function () {
     return view('auth.login');
 })->name('login');
 
-
+// Rota do Dashboard com captura de exceção para não dar tela em branco/500 genérico
 Route::get('/dashboard', function () {
     try {
-        $totalClientes = \App\Models\Cliente::count();
+        $totalClientes = Cliente::count();
+        $totalUsuarios = User::count();
+        return view('dashboard', compact('totalClientes', 'totalUsuarios'));
     } catch (\Throwable $e) {
-        $totalClientes = 0;
+        // Se houver qualquer falha no banco ou renderização, exibe o motivo na tela em vez do 500 genérico
+        return response()->json([
+            'status' => 'ERRO NO DASHBOARD',
+            'mensagem' => $e->getMessage(),
+            'arquivo' => $e->getFile(),
+            'linha' => $e->getLine()
+        ], 500);
     }
-    try {
-        $totalUsuarios = \App\Models\User::count();
-    } catch (\Throwable $e) {
-        $totalUsuarios = 0;
-    }
-    return view('dashboard', compact('totalClientes', 'totalUsuarios'));
 });
 
-// Telas de Clientes (Apenas entregam as Views Blade)
+// Views Blade dos módulos
 Route::view('/clientes', 'clientes.index');
 Route::view('/clientes/create', 'clientes.create');
 Route::get('/clientes/{id}/edit', function ($id) {
     return view('clientes.edit');
 });
 
-// Telas de Usuários
 Route::view('/usuarios', 'usuarios.index');
 Route::view('/usuarios/create', 'usuarios.create');
-
-// Telas de Veículos (Se já existirem as views, descomente abaixo)
-// Route::view('/veiculos', 'veiculos.index');
-
-// Telas de Financiamentos (Se já existirem as views, descomente abaixo)
-// Route::view('/financiamentos', 'financiamentos.index');
-
 Route::view('/ponto', 'ponto.index');

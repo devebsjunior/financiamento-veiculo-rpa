@@ -7,31 +7,34 @@ use App\Http\Controllers\ParcelaController;
 use App\Http\Controllers\PontoController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VeiculoController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::post('login', [AuthController::class, 'login']);
 
-
 Route::middleware('jwt.auth')->group(function () {
+  
+  Route::get('/me', function (Request $request) {
+    /** @var \App\Models\User $user */
+    $user = Auth::user();
+    return response()->json($user);
+  });
+  Route::post('logout', [AuthController::class, 'logout']);
 
-    // Autenticação
-    Route::post('logout', [AuthController::class, 'logout']);
+  Route::apiResource('users', UserController::class);
+  Route::apiResource('clientes', ClienteController::class);
+  Route::apiResource('veiculos', VeiculoController::class);
+  Route::apiResource('financiamentos', FinanciamentoController::class);
 
-    // Recursos da API (Users, Clientes, Veículos e Financiamentos)
-    Route::apiResource('users', UserController::class);
-    Route::apiResource('clientes', ClienteController::class);
-    Route::apiResource('veiculos', VeiculoController::class);
-    Route::apiResource('financiamentos', FinanciamentoController::class);
+  Route::get('parcelas', [ParcelaController::class, 'index']);
+  Route::get('parcelas/{id}', [ParcelaController::class, 'show']);
+  Route::patch('parcelas/{id}/pagar', [ParcelaController::class, 'pagar']);
 
-    // Sub-rotas de Parcelas
-    Route::get('parcelas', [ParcelaController::class, 'index']);
-    Route::get('parcelas/{id}', [ParcelaController::class, 'show']);
-    Route::patch('parcelas/{id}/pagar', [ParcelaController::class, 'pagar']);
-
-    Route::post('/ponto/marcar', [PontoController::class, 'baterPonto']);
-    Route::get('/ponto/espelho/{anoMes}', [PontoController::class, 'espelhoMes']);
-    Route::get('/ponto/admin/listar', [PontoController::class, 'index']);
-    Route::put('/ponto/admin/{id}', [PontoController::class, 'update']);
-    Route::delete('/ponto/admin/{id}', [PontoController::class, 'destroy']);
-    Route::delete('/ponto/admin/{id}/horario/{index}', [PontoController::class, 'destroyHorario']);
+  Route::post('/ponto/marcar', [PontoController::class, 'baterPonto']);
+  Route::get('/ponto/espelho/{anoMes}', [PontoController::class, 'espelhoMes']);
+  Route::get('/ponto/admin/listar', [PontoController::class, 'index']);
+  Route::put('/ponto/admin/{id}', [PontoController::class, 'update']);
+  Route::delete('/ponto/admin/{id}', [PontoController::class, 'destroy']);
+  Route::delete('/ponto/admin/{id}/horario/{index}', [PontoController::class, 'destroyHorario']);
 });

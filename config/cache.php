@@ -3,7 +3,6 @@
 use Illuminate\Support\Str;
 
 return [
-    // 'default' => env('CACHE_STORE', 'database'),
     'default' => 'file',
     'stores' => [
         'array' => [
@@ -36,7 +35,6 @@ return [
                 env('MEMCACHED_PASSWORD'),
             ],
             'options' => [
-                // Memcached::OPT_CONNECT_TIMEOUT => 2000,
             ],
             'servers' => [
                 [

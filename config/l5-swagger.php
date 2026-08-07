@@ -52,8 +52,6 @@ return [
 			'analyser' => null,
 			'analysis' => null,
 			'processors' => [
-				// \App\SwaggerProcessors\SchemaQueryParameter::class,
-				// ['class' => \App\SwaggerProcessors\Custom::class, 'after' => \OpenApi\Processors\AugmentSchemas::class],
 			],
 			'pattern' => null,
 			'exclude' => [],

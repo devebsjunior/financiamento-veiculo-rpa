@@ -39,16 +39,13 @@ class AuthController extends Controller
 
       $credentials = $request->only('email', 'password');
 
-      // Autentica via guard 'api' (JWT)
       if (! $token = Auth::guard('api')->attempt($credentials)) {
-        // Retorna 'message' exatamente como o login.blade.php espera no erro
         return response()->json(['message' => 'E-mail ou senha inválidos'], 401);
       }
 
       /** @var \Tymon\JWTAuth\JWTGuard $guard */
       $guard = Auth::guard('api');
 
-      // Retorna 'token' e 'message' para casamento perfeito com o login.blade.php
       return response()->json([
         'message' => 'Login efetuado com sucesso',
         'token' => $token,

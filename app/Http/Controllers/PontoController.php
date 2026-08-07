@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PontoRegistradoEvent;
 use App\Services\PontoService;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Junges\Kafka\Facades\Kafka;
+use Junges\Kafka\Message\Message;
 use OpenApi\Attributes as OA;
 
 class PontoController extends Controller
@@ -131,10 +134,17 @@ class PontoController extends Controller
     /** @var \App\Models\User $user */
     $user = Auth::user();
     $userId = $user->id;
-
     $observacao = $request->input('observacao');
     $resultado = $this->pontoService->registrarPonto($userId, $observacao);
-
+    $payload = [
+      'usuario_id'    => $user->id,
+      'usuario_nome'  => $user->name,
+      'usuario_email' => $user->email,
+      'observacao'    => $observacao,
+      'data_hora'     => now()->toDateTimeString(),
+      'registro'      => $resultado,
+    ];
+    event(new PontoRegistradoEvent($payload));
     return response()->json($resultado, 200, [], JSON_UNESCAPED_UNICODE);
   }
 
@@ -171,42 +181,42 @@ class PontoController extends Controller
     return response()->json($resultado, 200);
   }
 
-#[OA\Delete(
-        path: "/api/ponto/admin/{id}/horario/{index}",
-        summary: "Remover um horário específico do ponto (Admin)",
-        description: "Remove um horário do array de batidas com base no seu índice de posição (0, 1, 2...).",
-        tags: ["Marcação de Ponto"],
-        security: [["bearerAuth" => []]]
-    )]
-    #[OA\Parameter(
-        name: "id",
-        in: "path",
-        required: true,
-        description: "ID do registro de ponto",
-        schema: new OA\Schema(type: "string")
-    )]
-    #[OA\Parameter(
-        name: "index",
-        in: "path",
-        required: true,
-        description: "Índice do horário no array (ex: 0 para a primeira batida)",
-        schema: new OA\Schema(type: "integer", example: 0)
-    )]
-    #[OA\Response(
-        response: 200,
-        description: "Horário removido do registro com sucesso"
-    )]
-    #[OA\Response(
-        response: 404,
-        description: "Registro de ponto não encontrado"
-    )]
-    public function destroyHorario(string $id, int $index): JsonResponse
-    {
-        $ponto = $this->pontoService->removerHorarioEspecifico($id, $index);
+  #[OA\Delete(
+    path: "/api/ponto/admin/{id}/horario/{index}",
+    summary: "Remover um horário específico do ponto (Admin)",
+    description: "Remove um horário do array de batidas com base no seu índice de posição (0, 1, 2...).",
+    tags: ["Marcação de Ponto"],
+    security: [["bearerAuth" => []]]
+  )]
+  #[OA\Parameter(
+    name: "id",
+    in: "path",
+    required: true,
+    description: "ID do registro de ponto",
+    schema: new OA\Schema(type: "string")
+  )]
+  #[OA\Parameter(
+    name: "index",
+    in: "path",
+    required: true,
+    description: "Índice do horário no array (ex: 0 para a primeira batida)",
+    schema: new OA\Schema(type: "integer", example: 0)
+  )]
+  #[OA\Response(
+    response: 200,
+    description: "Horário removido do registro com sucesso"
+  )]
+  #[OA\Response(
+    response: 404,
+    description: "Registro de ponto não encontrado"
+  )]
+  public function destroyHorario(string $id, int $index): JsonResponse
+  {
+    $ponto = $this->pontoService->removerHorarioEspecifico($id, $index);
 
-        return response()->json([
-            'mensagem' => 'Horário removido com sucesso!',
-            'ponto' => $ponto
-        ], 200, [], JSON_UNESCAPED_UNICODE);
-    }
+    return response()->json([
+      'mensagem' => 'Horário removido com sucesso!',
+      'ponto' => $ponto
+    ], 200, [], JSON_UNESCAPED_UNICODE);
+  }
 }

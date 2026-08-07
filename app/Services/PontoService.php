@@ -18,8 +18,6 @@ class PontoService
     {
         $hoje = Carbon::now()->format('Y-m-d');
         $horaAtual = Carbon::now()->format('H:i:s');
-
-        // Busca o registro do dia ou cria um novo se não existir
         $ponto = Ponto::firstOrCreate(
             [
                 'user_id' => $userId,
@@ -34,8 +32,6 @@ class PontoService
 
         $horarios = $ponto->horarios ?? [];
         $horarios[] = $horaAtual;
-
-        // Recalcular o total de horas batidas
         $totalHoras = $this->calcularTotalHoras($horarios);
 
         $ponto->update([

@@ -26,7 +26,6 @@ class JwtInterceptorMiddleware
      */
     public function handle(Request $request, Closure $next): JsonResponse|\Symfony\Component\HttpFoundation\Response
     {
-        // 1. Extrai o token do cabeçalho Authorization: Bearer XXXXX
         $token = $request->bearerToken();
 
         if (!$token) {
@@ -37,7 +36,6 @@ class JwtInterceptorMiddleware
             ], 401);
         }
 
-        // 2. Valida o token usando o nosso serviço isolado (igual JwtTokenUtil)
         if (!$this->tokenService->validateToken($token)) {
             return response()->json([
                 'status' => 401,
@@ -45,17 +43,11 @@ class JwtInterceptorMiddleware
                 'message' => 'Token inválido ou expirado.'
             ], 401);
         }
-
         try {
-            // 3. Autentica o usuário no contexto de segurança do Laravel
             $user = JWTAuth::setToken($token)->authenticate();
-
-            // Evita o erro no $user: Garante para a IDE que encontramos um modelo de usuário válido antes de injetar
             if (!$user instanceof \Illuminate\Contracts\Auth\Authenticatable) {
                 throw new Exception("Usuário inválido no token.");
             }
-
-            // Injeta o usuário autenticado explicitamente no guard da API
             Auth::guard('api')->setUser($user);
 
         } catch (Exception $e) {

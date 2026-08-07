@@ -11,18 +11,12 @@ class UsersExport implements FromCollection, WithHeadings, WithMapping
 {
     public function collection()
     {
-        return User::all();
+       return User::select('nome', 'email', 'ativo', 'created_at')->get();
     }
 
     public function headings(): array
     {
-        return [
-            'ID (UUID)',
-            'Nome Completo',
-            'E-mail',
-            'Status',
-            'Data de Cadastro'
-        ];
+       return ['Nome', 'E-mail', 'Ativo', 'Data de Cadastro'];
     }
 
     /**
@@ -33,7 +27,6 @@ class UsersExport implements FromCollection, WithHeadings, WithMapping
     public function map($user): array
     {
         return [
-            $user->id,
             $user->nome,
             $user->email,
             $user->ativo ? 'Ativo' : 'Inativo',

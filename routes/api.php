@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\Route;
 Route::post('login', [AuthController::class, 'login']);
 
 Route::middleware('jwt.auth')->group(function () {
-  
+  Route::get('/users/export', [UserController::class, 'export']);
+
   Route::get('/me', function (Request $request) {
     /** @var \App\Models\User $user */
     $user = Auth::user();
@@ -23,6 +24,7 @@ Route::middleware('jwt.auth')->group(function () {
   Route::post('logout', [AuthController::class, 'logout']);
 
   Route::apiResource('users', UserController::class);
+
   Route::apiResource('clientes', ClienteController::class);
   Route::apiResource('veiculos', VeiculoController::class);
   Route::apiResource('financiamentos', FinanciamentoController::class);

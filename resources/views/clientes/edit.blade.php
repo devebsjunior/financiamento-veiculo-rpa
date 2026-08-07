@@ -343,12 +343,7 @@
 
                 const result = await response.json();
                 if (!response.ok) throw new Error(result.message || 'Erro ao atualizar dados.');
-
-                // ========================================================
-                // IMPEDINDO O HELPER COMPLEXO DE QUEBRAR O FLUXO
-                // ========================================================
                 if (window.Swal) {
-                    // Abre o modal estilizado usando a instância global injetada pelo Vite
                     await window.Swal.fire({
                         title: 'Sucesso!',
                         text: 'Os dados do cliente foram alterados com sucesso.',
@@ -362,12 +357,8 @@
                 } else {
                     alert('Os dados do cliente foram alterados com sucesso.');
                 }
-
-                // O redirecionamento aguarda a confirmação do modal acima
                 window.location.href = '/clientes';
-
             } catch (error) {
-                // Se houver algum erro real na API, exibe no banner vermelho
                 errorAlertText.textContent = error.message;
                 errorAlert.classList.remove('hidden');
                 window.scrollTo({

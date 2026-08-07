@@ -17,17 +17,14 @@ class K8sAutoAuth
         $email = $request->header('X-Auth-Request-Email');
         $name = $request->header('X-Auth-Request-Preferred-Username') ?? 'Usuário';
 
-
         if (!$email) {
             abort(401, 'Acesso não autorizado. Por favor, faça login através do portal.');
         }
 
-        // 2. Busca o usuário no PostgreSQL. Se não existir, cadastra na hora!
         $user = User::firstOrCreate(
             ['email' => $email],
             [
                 'name' => $name,
-                // Como o login é gerenciado pelo Kubernetes, salvamos uma senha segura aleatória no banco
                 'password' => bcrypt(Str::random(24))
             ]
         );

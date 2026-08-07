@@ -229,7 +229,6 @@
     </div>
 
     <script type="module">
-        // Importa o SweetAlert direto do node_modules usando o ecossistema do Vite
         import Swal from 'sweetalert2';
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -307,9 +306,6 @@
                 const result = await response.json();
                 if (!response.ok) throw new Error(result.message || 'Erro ao processar requisição.');
 
-                // ========================================================
-                // IMPORTE E EXECUÇÃO DIRETA SEM DEPENDER DE WINDOW
-                // ========================================================
                 await Swal.fire({
                     title: 'Sucesso!',
                     text: 'O cliente foi cadastrado corretamente na base de dados.',
@@ -319,10 +315,7 @@
                     allowOutsideClick: false,
                     fontFamily: '"Plus Jakarta Sans", sans-serif'
                 });
-
-                // O redirecionamento aguarda estritamente o clique no botão do modal anterior
                 window.location.href = '/clientes';
-
             } catch (error) {
                 await Swal.fire({
                     title: 'Ops!',
@@ -333,8 +326,6 @@
                 });
             }
         }
-
-        // Vincula a função ao escopo global para o atributo onsubmit="salvarCliente(event)" continuar funcionando
         window.salvarCliente = salvarCliente;
     </script>
 

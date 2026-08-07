@@ -10,7 +10,6 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                // Define a Plus Jakarta Sans como a fonte sans padrão do sistema
                 sans: ['"Plus Jakarta Sans"', ...defaultTheme.fontFamily.sans],
             },
         },

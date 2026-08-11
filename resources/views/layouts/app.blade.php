@@ -8,13 +8,6 @@
         content="width=device-width, initial-scale=1.0"
     >
     <title>@yield('title')</title>
-
-    <!-- FontAwesome Font Icon -->
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-    >
-
     @vite(['resources/css/app.css', 'resources/js/auth-guard.js'])
 </head>
 
@@ -46,6 +39,24 @@
                             class="fa-solid fa-chevron-left text-sm transition-transform duration-300"
                         ></i>
                     </button>
+                </div>
+
+                <!-- CARD DE IDENTIFICAÇÃO DO USUÁRIO LOGADO -->
+                <div
+                    class="px-4 py-3 bg-slate-950/60 border-b border-slate-800 flex items-center gap-3 overflow-hidden">
+                    <!-- CIRCULO COM AS INICIAIS DO USUÁRIO -->
+                    <div
+                        id="sidebarUserAvatar"
+                        class="w-9 h-9 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs uppercase shrink-0 shadow-inner border border-indigo-400/30"
+                    >
+                        --
+                    </div>
+                    <div class="sidebar-text overflow-hidden leading-tight">
+                        <p
+                            id="sidebarUserName"
+                            class="text-sm font-bold text-slate-100 truncate"
+                        >Carregando...</p>
+                    </div>
                 </div>
 
                 <!-- MENU DE NAVEGAÇÃO -->
@@ -139,6 +150,9 @@
     <!-- SCRIPT DE MANIPULAÇÃO DA SIDEBAR E LOGOUT -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+
+            carregarUsuarioSidebar();
+
             const sidebar = document.getElementById('sidebar');
             const btnToggle = document.getElementById('btnToggleSidebar');
             const iconToggle = document.getElementById('iconToggleSidebar');
@@ -152,6 +166,7 @@
                 aplicarModoEncolhido(recolher);
                 localStorage.setItem('sidebar_collapsed', recolher);
             });
+
             function aplicarModoEncolhido(recolher) {
                 if (recolher) {
                     sidebar.classList.remove('w-64');
@@ -166,6 +181,62 @@
                 }
             }
         });
+
+        function carregarUsuarioSidebar() {
+            const userNameEl = document.getElementById('sidebarUserName');
+            const userAvatarEl = document.getElementById('sidebarUserAvatar');
+
+            // 1. Busca os dados salvos em múltiplos padrões de localStorage
+            const userRaw = localStorage.getItem('user') || localStorage.getItem('usuario') || '{}';
+            let userStorage = {};
+            try {
+                userStorage = JSON.parse(userRaw);
+            } catch (e) {}
+
+            let nomeCompleto = userStorage.nome || userStorage.name;
+            let email = userStorage.email;
+
+            // 2. Fallback: Se não encontrou o nome no user, extrai do token JWT
+            const token = localStorage.getItem('token');
+            if (token && (!nomeCompleto || !email)) {
+                try {
+                    const base64Url = token.split('.')[1];
+                    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                    const jsonPayload = decodeURIComponent(
+                        atob(base64)
+                        .split('')
+                        .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+                        .join('')
+                    );
+                    const payload = JSON.parse(jsonPayload);
+                    nomeCompleto = nomeCompleto || payload.nome || payload.name;
+                    email = email || payload.email;
+                } catch (e) {
+                    console.error('Erro ao ler token:', e);
+                }
+            }
+
+            // Fallback caso venha sem nome mas tenha e-mail
+            if (!nomeCompleto && email) {
+                nomeCompleto = email.split('@')[0];
+            }
+
+            // 3. REGRA DO NOME: Exibe o nome completo do usuário (sem fatiar com split)
+            const nomeExibicao = nomeCompleto ? nomeCompleto.trim() : 'Usuário';
+
+            // 4. Calcula as Iniciais para o Círculo Avatar (Ex: Edson Belem -> EB / Edson Belem de Souza -> ES)
+            let iniciais = 'US';
+            if (nomeCompleto && nomeCompleto.trim().includes(' ')) {
+                const partes = nomeCompleto.trim().split(' ').filter(p => p.length > 0);
+                iniciais = (partes[0][0] + partes[partes.length - 1][0]).toUpperCase(); //
+            } else if (nomeExibicao.length >= 2) {
+                iniciais = nomeExibicao.substring(0, 2).toUpperCase(); //
+            }
+
+            // 5. Atualiza os elementos na tela
+            if (userNameEl) userNameEl.innerText = nomeExibicao;
+            if (userAvatarEl) userAvatarEl.innerText = iniciais;
+        }
 
         async function executarLogout() {
             if (window.alertService) {

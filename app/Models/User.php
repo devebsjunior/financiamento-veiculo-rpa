@@ -22,66 +22,68 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  */
 class User extends Authenticatable implements JWTSubject
 {
-    use HasFactory;
-    use HasUuids;
-    use Notifiable;
+  use HasFactory;
+  use HasUuids;
+  use Notifiable;
 
-    protected $table = 'users';
+  protected $table = 'users';
 
-    /**
-     * O tipo de ID do banco de dados (UUID).
-     *
-     * @var string
-     */
-    protected $keyType = 'string';
+  /**
+   * O tipo de ID do banco de dados (UUID).
+   *
+   * @var string
+   */
+  protected $keyType = 'string';
 
-    /**
-     * Desliga o auto-incremento numérico para aceitar strings.
-     *
-     * @var bool
-     */
-    public $incrementing = false;
+  /**
+   * Desliga o auto-incremento numérico para aceitar strings.
+   *
+   * @var bool
+   */
+  public $incrementing = false;
 
-    protected $fillable = [
-        'nome',
-        'email',
-        'password',
-        'ativo',
+  protected $fillable = [
+    'nome',
+    'email',
+    'password',
+    'ativo',
+  ];
+
+  protected $hidden = [
+    'password',
+    'remember_token',
+  ];
+
+  protected function casts(): array
+  {
+    return [
+      'ativo' => 'boolean',
+      'email_verified_at' => 'datetime',
+      'password' => 'hashed',
     ];
+  }
 
-    protected $hidden = [
-        'password',
-        'remember_token',
+  /**
+   * Retorna o identificador do JWT.
+   *
+   * @return mixed
+   */
+  public function getJWTIdentifier(): mixed
+  {
+    return $this->getKey();
+  }
+
+  /**
+   * Retorna um array com claims personalizadas para o JWT.
+   *
+   * @return array
+   */
+  public function getJWTCustomClaims(): array
+  {
+    return [
+      'nome'  => $this->nome,
+      'email' => $this->email,
+      'ativo' => $this->ativo,
     ];
-
-    protected function casts(): array
-    {
-        return [
-            'ativo' => 'boolean',
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
-
-    /**
-     * Retorna o identificador do JWT.
-     *
-     * @return mixed
-     */
-    public function getJWTIdentifier(): mixed
-    {
-        return $this->getKey();
-    }
-
-    /**
-     * Retorna um array com claims personalizadas para o JWT.
-     *
-     * @return array
-     */
-    public function getJWTCustomClaims(): array
-    {
-        return [
-            'email' => $this->email,
-        ];
-    }
+  }
 }

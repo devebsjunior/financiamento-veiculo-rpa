@@ -58,7 +58,7 @@
             </div>
 
             <div class="flex justify-end gap-2 pt-4 border-t border-slate-100">
-                <a href="/usuarios" class="bg-slate-100 text-slate-600 px-4 py-2 rounded-lg text-xs font-medium hover:bg-slate-200 transition">
+                <a href="/users" class="bg-slate-100 text-slate-600 px-4 py-2 rounded-lg text-xs font-medium hover:bg-slate-200 transition">
                     Cancelar
                 </a>
                 <button type="submit" id="btnSubmit" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-xs font-medium hover:bg-blue-700 transition shadow-sm flex items-center gap-1.5">

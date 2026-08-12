@@ -2,6 +2,8 @@
 Ecossistema Laravel, Kafka, Prometheus, Grafana & Swagger
 Uma solução completa e robusta de Controle e Marcação de Ponto desenvolvida em Laravel (PHP 8.4), projetada sob a arquitetura orientada a eventos (Event-Driven Architecture). O sistema conta com observabilidade avançada, gestão centralizada de colaboradores, exportação de relatórios, processamento de e-mails via filas de mensageria assíncrona e capacidade de integração aberta com microsserviços e ERPs externos.
 
+![PHP 8.4](https://img.shields.io/badge/PHP-8.4-777BB4?style=flat&logo=php&logoColor=white) ![Laravel 11](https://img.shields.io/badge/Laravel-11-FF2D20?style=flat&logo=laravel&logoColor=white) ![Apache Kafka](https://img.shields.io/badge/Apache%20Kafka-Event--Driven-231F20?style=flat&logo=apachekafka&logoColor=white) ![Prometheus](https://img.shields.io/badge/Prometheus-Metrics-E6522C?style=flat&logo=prometheus&logoColor=white) ![Grafana](https://img.shields.io/badge/Grafana-Dashboards-F46800?style=flat&logo=grafana&logoColor=white) ![Swagger / OpenAPI](https://img.shields.io/badge/Swagger-OpenAPI%203.0-85EA2D?style=flat&logo=swagger&logoColor=black) ![JWT Auth](https://img.shields.io/badge/JWT-Authentication-000000?style=flat&logo=jsonwebtokens&logoColor=white) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=flat&logo=postgresql&logoColor=white) ![Docker Compose](https://img.shields.io/badge/Docker-Compose-2496ED?style=flat&logo=docker&logoColor=white) ![License](https://img.shields.io/badge/license-MIT-green?style=flat)
+
 📑 Sumário
 - Visão Geral do Projeto
 - 🌐 URLs de Acesso Aos Serviços
